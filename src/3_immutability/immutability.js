@@ -28,35 +28,58 @@ export const users = Object.freeze([user10]);
 // Ritornare l'array di utenti con le proprietà cambiate, mantenendo invariate quelle non presenti in addressChanges
 export const changeUsersAddress = (users, addressChanges) => {
   return users.map((user) => {
-    return {
-      ...user,
-      address: Object.entries(addressChanges).reduce(
-        (acc, [key, value]) => {
-          acc[key] = value;
-          return acc;
-        },
-        { ...user.address }
-      ),
-    };
+    const userToReturn = { ...user, address: { ...user.address } };
+    userToReturn.address = Object.entries(addressChanges).reduce(
+      (acc, [key, value]) => {
+        acc[key] = value;
+        return acc;
+      },
+      userToReturn.address
+    );
+    return userToReturn;
   });
 };
 
 // Ritornare l'array di utenti senza geo in address
-export const removeAddressCoordinates = (users) => {};
+export const removeAddressCoordinates = (users) => {
+  return users.map((user) => {
+    return {
+      ...user,
+      address: { ...user.address, geo: undefined },
+    };
+  });
+};
 
 // Ritornare l'array di utenti senza company
 export const removeCompanyInfo = (users) => {
   return users.map((user) => {
-    return Object.fromEntries(
-      Object.entries(user).filter(([key, _]) => key != 'company')
-    );
+    return { ...user, company: undefined };
   });
 };
 
 // Aggiungere newUser a users e ritornare l'array
 export const addNewUser = (users, newUser) => {
-  return [...users, newUser];
+  return users.reduce(
+    (acc, _) => {
+      acc.push(newUser);
+      return acc;
+    },
+    [...users]
+  );
 };
 
 // Ritornare l'array di utenti con lat e lng dentro geo convertiti in numero, non stringa
-export const convertUsersGeoToNumber = (users) => {};
+export const convertUsersGeoToNumber = (users) => {
+  return users.map((user) => {
+    const userToReturn = {
+      ...user,
+      address: { ...user.address, geo: user.address.geo },
+    };
+    userToReturn.address.geo = Object.fromEntries(
+      Object.entries(userToReturn.address.geo).map(([key, value]) => {
+        return [key, Number(value)];
+      })
+    );
+    return userToReturn;
+  });
+};
