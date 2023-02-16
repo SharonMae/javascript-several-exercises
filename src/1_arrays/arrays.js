@@ -226,39 +226,45 @@ export function populatePosts(posts, comments, users) {
 // Implementare il metodo nativo Array.map()
 export function map(array, mapper) {
   const arr = [];
-  array.forEach((item, index) => {
-    arr.push(mapper(item, index));
-  });
+
+  for (let i = 0; i < array.length; i++) {
+    arr.push(mapper(array[i], i, array));
+  }
+
   return arr;
 }
 
 // Implementare il metodo nativo Array.filter()
 export function filter(array, predicate) {
   const arr = [];
-  array.forEach((item, index) => {
-    if (predicate(item, index)) {
-      arr.push(item);
+
+  for (let i = 0; i < array.length; i++) {
+    if (predicate(array[i], i, array)) {
+      arr.push(array[i]);
     }
-  });
+  }
+
   return arr;
 }
 
 // Implementare il metodo nativo Array.some()
 export function some(array, predicate) {
-  if (array.find((item) => predicate(item) === true)) {
-    return true;
-  } else {
-    return false;
+  for (let i = 0; i < array.length; i++) {
+    if (predicate(array[i], i, array)) {
+      return true;
+    }
   }
+  return false;
 }
 
 // Implementare il metodo nativo Array.every()
 export function every(array, predicate) {
-  if (array.find((item) => predicate(item) === false)) {
-    return false;
-  } else {
-    return true;
+  for (let i = 0; i < array.length; i++) {
+    if (!predicate(array[i], i, array)) {
+      return false;
+    }
   }
+  return true;
 }
 
 // Implementare il metodo nativo Array.reduce()
